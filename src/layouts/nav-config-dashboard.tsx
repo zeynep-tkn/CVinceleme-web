@@ -14,17 +14,17 @@ export type NavItem = {
 
 export const navData = [
   {
-    title: 'Dashboard',
+    title: 'Ana Sayfa',
     path: '/',
     icon: icon('ic-analytics'),
   },
   {
-    title: 'User',
+    title: 'Adaylar',
     path: '/user',
     icon: icon('ic-user'),
   },
   {
-    title: 'Product',
+    title: 'CV Yükle',
     path: '/products',
     icon: icon('ic-cart'),
     info: (
@@ -34,17 +34,17 @@ export const navData = [
     ),
   },
   {
-    title: 'Blog',
+    title: 'Aday Sırala',
     path: '/blog',
     icon: icon('ic-blog'),
   },
   {
-    title: 'Sign in',
+    title: 'Giriş Yap',
     path: '/sign-in',
     icon: icon('ic-lock'),
   },
   {
-    title: 'Not found',
+    title: 'Ayarlar',
     path: '/404',
     icon: icon('ic-disabled'),
   },
