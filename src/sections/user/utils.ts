@@ -1,6 +1,4 @@
-import type { UserProps } from './user-table-row';
-
-// ----------------------------------------------------------------------
+import { fDate } from 'src/utils/format-time';
 
 export const visuallyHidden = {
   border: 0,
@@ -12,15 +10,43 @@ export const visuallyHidden = {
   position: 'absolute',
   whiteSpace: 'nowrap',
   clip: 'rect(0 0 0 0)',
-} as const;
+}
+// ----------------------------------------------------------------------
+
+export const fTimestamp = (date: Date | string | number) =>
+  fDate(date, 'dd MMM yyyy p');
 
 // ----------------------------------------------------------------------
+
+export function remToPx(value: string) {
+  return Math.round(parseFloat(value) * 16);
+}
+
+export function pxToRem(value: number) {
+  return `${value / 16}rem`;
+}
+
+export function responsiveFontSizes({ sm, md, lg }: { sm: number; md: number; lg: number }) {
+  return {
+    '@media (min-width:600px)': {
+      fontSize: pxToRem(sm),
+    },
+    '@media (min-width:900px)': {
+      fontSize: pxToRem(md),
+    },
+    '@media (min-width:1200px)': {
+      fontSize: pxToRem(lg),
+    },
+  };
+}
+
+// ----------------------------------------------------------------------
+
+type InputValue = string | number | null;
 
 export function emptyRows(page: number, rowsPerPage: number, arrayLength: number) {
   return page ? Math.max(0, (1 + page) * rowsPerPage - arrayLength) : 0;
 }
-
-// ----------------------------------------------------------------------
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -32,33 +58,24 @@ function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   return 0;
 }
 
-// ----------------------------------------------------------------------
-
 export function getComparator<Key extends keyof any>(
   order: 'asc' | 'desc',
   orderBy: Key
-): (
-  a: {
-    [key in Key]: number | string;
-  },
-  b: {
-    [key in Key]: number | string;
-  }
-) => number {
+): (a: { [key in Key]: InputValue }, b: { [key in Key]: InputValue }) => number {
   return order === 'desc'
     ? (a, b) => descendingComparator(a, b, orderBy)
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-// ----------------------------------------------------------------------
-
-type ApplyFilterProps = {
-  inputData: UserProps[];
+export function applyFilter<T>({
+  inputData,
+  comparator,
+  filterName,
+}: {
+  inputData: T[];
+  comparator: (a: T, b: T) => number;
   filterName: string;
-  comparator: (a: any, b: any) => number;
-};
-
-export function applyFilter({ inputData, comparator, filterName }: ApplyFilterProps) {
+}) {
   const stabilizedThis = inputData.map((el, index) => [el, index] as const);
 
   stabilizedThis.sort((a, b) => {
@@ -70,8 +87,10 @@ export function applyFilter({ inputData, comparator, filterName }: ApplyFilterPr
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
+    // DÜZELTME: 'name' yerine 'nameSurname' alanında arama yapılıyor.
+    // 'any' kullanarak TypeScript'in bu dinamik alan erişimine izin vermesini sağlıyoruz.
     inputData = inputData.filter(
-      (user) => user.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+      (user: any) => user.nameSurname.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
     );
   }
 

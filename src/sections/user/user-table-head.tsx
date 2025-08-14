@@ -14,9 +14,9 @@ type UserTableHeadProps = {
   rowCount: number;
   numSelected: number;
   order: 'asc' | 'desc';
-  onSort: (id: string) => void;
+  onSort?: (id: string) => void;
   headLabel: Record<string, any>[];
-  onSelectAllRows: (checked: boolean) => void;
+  onSelectAllRows?: (checked: boolean) => void;
 };
 
 export function UserTableHead({
@@ -35,9 +35,9 @@ export function UserTableHead({
           <Checkbox
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-              onSelectAllRows(event.target.checked)
-            }
+            // onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+            //   onSelectAllRows(event.target.checked)
+            // }
           />
         </TableCell>
 
@@ -52,7 +52,7 @@ export function UserTableHead({
               hideSortIcon
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={() => onSort(headCell.id)}
+              // onClick={() => onSort(headCell.id)}
             >
               {headCell.label}
               {orderBy === headCell.id ? (
