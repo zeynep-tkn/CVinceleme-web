@@ -16,12 +16,12 @@ export const navData = [
   {
     title: 'Ana Sayfa',
     path: '/',
-    icon: icon('ic-analytics'),
+    icon: icon('ic-home'),
   },
   {
     title: 'Adaylar',
     path: '/candidate',
-    icon: icon('ic-user'),
+    icon: icon('ic-candidates'),
   },
   {
     title: 'CV Yükle',
@@ -31,11 +31,11 @@ export const navData = [
   {
     title: 'Aday Sırala',
     path: '/rank',
-    icon: icon('ic_analytics'),
+    icon: icon('ic-rank'),
   },
   {
     title: 'Giriş Yap',
     path: '/sign-in',
-    icon: icon('ic-lock'),
+    icon: icon('ic-signin'),
   },
 ];

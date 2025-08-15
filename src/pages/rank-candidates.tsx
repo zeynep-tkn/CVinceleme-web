@@ -1,7 +1,7 @@
 import { _posts } from 'src/_mock';
 import { CONFIG } from 'src/config-global';
 
-import { AdaySiralaView } from 'src/sections/rankCandidates/view';
+import { AdaySiralaView } from 'src/sections/rank/view';
 
 // ----------------------------------------------------------------------
 

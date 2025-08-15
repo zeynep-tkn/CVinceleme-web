@@ -1,6 +1,6 @@
 import { CONFIG } from 'src/config-global';
 
-import { CVView } from 'src/sections/product/view';
+import { UploadView } from 'src/sections/upload/view';
 
 // ----------------------------------------------------------------------
 
@@ -9,7 +9,7 @@ export default function Page() {
     <>
       <title>{`CV Yükle - ${CONFIG.appName}`}</title>
 
-      <CVView />
+      <UploadView />
     </>
   );
 }
