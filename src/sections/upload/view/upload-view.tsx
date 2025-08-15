@@ -1,41 +1,43 @@
 import { useDropzone } from 'react-dropzone';
 import { useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import List from '@mui/material/List';
-import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
+import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
-import { alpha } from '@mui/material/styles';
+import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
 import Container from '@mui/material/Container';
-import IconButton from '@mui/material/IconButton';
+import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
 import ListItemText from '@mui/material/ListItemText';
 import CircularProgress from '@mui/material/CircularProgress';
 
 import { Iconify } from 'src/components/iconify';
+
 // ----------------------------------------------------------------------
 
-type UploadResult = {
-  message: string;
-  successfullyProcessed: number;
-  failedOrSkippedFiles: number;
-  errorDetails: string[];
-};
-
 export function UploadView() {
+  // --- State'ler ---
   const [files, setFiles] = useState<File[]>([]);
-  const [isUploading, setIsUploading] = useState(false);
-  const [uploadResult, setUploadResult] = useState<UploadResult | null>(null);
-  const [uploadError, setUploadError] = useState<string | null>(null);
+  const [department, setDepartment] = useState('');
+  const [jobDescription, setJobDescription] = useState('');
+  
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
+  const navigate = useNavigate();
+
+  // --- Dosya Yükleme Alanı Fonksiyonları ---
   const onDrop = useCallback((acceptedFiles: File[]) => {
     setFiles((prevFiles) => [...prevFiles, ...acceptedFiles]);
   }, []);
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+  const { getRootProps, getInputProps } = useDropzone({
     onDrop,
     accept: {
       'application/pdf': ['.pdf'],
@@ -47,68 +49,108 @@ export function UploadView() {
     setFiles((prevFiles) => prevFiles.filter((file) => file !== fileToRemove));
   };
 
-  const handleUpload = async () => {
+  // --- Ana İşlem Fonksiyonu ---
+  const handleProcessAndRank = async () => {
     if (files.length === 0) {
-      setUploadError('Lütfen en az bir dosya seçin.');
+      setError('Lütfen en az bir CV dosyası seçin.');
       return;
     }
-    setIsUploading(true);
-    setUploadError(null);
-    setUploadResult(null);
-    const formData = new FormData();
-    files.forEach((file) => formData.append('cvFiles', file));
+    if (!department) {
+      setError('Lütfen bir departman adı girin.');
+      return;
+    }
+    if (!jobDescription) {
+      setError('Lütfen bir iş tanımı girin.');
+      return;
+    }
+
+    setIsLoading(true);
+    setError(null);
 
     try {
-      const response = await fetch('https://localhost:7068/api/Analysis/analyze-cv', {
+      // 1. ADIM: Yeni CV'leri Yükle
+      const uploadFormData = new FormData();
+      files.forEach((file) => uploadFormData.append('cvFiles', file));
+      uploadFormData.append('department', department);
+
+      const uploadResponse = await fetch('https://localhost:7068/api/Analysis/analyze-cv', {
         method: 'POST',
-        body: formData,
+        body: uploadFormData,
       });
-      if (!response.ok) throw new Error(`HTTP hatası! Durum: ${response.status}`);
-      const result: UploadResult = await response.json();
-      setUploadResult(result);
-      setFiles([]);
+
+      if (!uploadResponse.ok) {
+        throw new Error(`CV yükleme hatası! Durum: ${uploadResponse.status}`);
+      }
+      
+      const uploadResult = await uploadResponse.json();
+      console.log('Yükleme Sonucu:', uploadResult);
+
+
+      // 2. ADIM: Adayları Puanla
+      const rankResponse = await fetch('https://localhost:7068/api/Candidates/rank', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ description: jobDescription, department }),
+      });
+      if (!rankResponse.ok) throw new Error(`Puanlama hatası! Durum: ${rankResponse.status}`);
+      
+      const rankingResult = await rankResponse.json();
+
+      // 3. ADIM: Sonuçlarla Birlikte Sıralama Sayfasına Yönlendir
+      navigate('/rank', { state: { results: rankingResult, jobTitle: jobDescription } });
+
     } catch (e) {
-      setUploadError(e instanceof Error ? `Yükleme hatası: ${e.message}` : 'Bilinmeyen bir hata oluştu.');
+      setError(e instanceof Error ? e.message : 'Bilinmeyen bir hata oluştu.');
     } finally {
-      setIsUploading(false);
+      setIsLoading(false);
     }
   };
 
   return (
     <Container>
-      <Typography variant="h4" sx={{ mb: 5 }}>
-        Toplu CV Yükle
+      <Typography variant="h4" sx={{ mb: 3 }}>
+        CV Yükle ve Puanla
       </Typography>
 
       <Card sx={{ p: 3 }}>
-        <Box
-          {...getRootProps()}
-          sx={{
-            border: `2px dashed ${isDragActive ? 'primary.main' : alpha('#919EAB', 0.2)}`,
-            borderRadius: 1,
-            p: 5,
-            textAlign: 'center',
-            cursor: 'pointer',
-            '&:hover': { borderColor: 'primary.main' },
-          }}
-        >
-          <input {...getInputProps()} />
-          <Iconify icon="eva:cloud-upload-fill" width={64} sx={{ mb: 2, color: 'text.disabled' }} />
-          <Typography>
-            CV dosyalarını buraya sürükleyin veya seçmek için tıklayın (.pdf, .docx)
-          </Typography>
-        </Box>
+        <Stack spacing={3}>
+          {/* --- Form Alanları --- */}
+          <TextField
+            label="Departman"
+            value={department}
+            onChange={(e) => setDepartment(e.target.value)}
+            fullWidth
+            required
+            helperText="Yüklenen CV'lerin atanacağı departman (örn: Yazılım, Mutfak)"
+          />
+          <TextField
+            label="İş Tanımı"
+            multiline
+            rows={4}
+            value={jobDescription}
+            onChange={(e) => setJobDescription(e.target.value)}
+            fullWidth
+            required
+            helperText="Bu departman için aradığınız pozisyonun özelliklerini girin."
+          />
+          
+          <Divider sx={{ borderStyle: 'dashed' }} />
 
-        {files.length > 0 && (
-          <Box sx={{ mt: 3 }}>
-            <Typography variant="h6">Seçilen Dosyalar:</Typography>
-            <List>
+          {/* --- Dosya Yükleme Alanı --- */}
+          <Box {...getRootProps()} sx={{ p: 3, border: '1px dashed grey', borderRadius: 1, textAlign: 'center', cursor: 'pointer' }}>
+            <input {...getInputProps()} />
+            <Iconify icon="solar:cloud-upload-bold" width={64} sx={{ mb: 1 }} />
+            <Typography>Dosyaları buraya sürükleyin veya seçmek için tıklayın</Typography>
+          </Box>
+
+          {files.length > 0 && (
+             <List>
               {files.map((file, index) => (
                 <ListItem
                   key={index}
                   secondaryAction={
                     <IconButton edge="end" onClick={() => handleRemoveFile(file)}>
-                      <Iconify icon="eva:close-fill" />
+                      <Iconify icon="solar:close-circle-bold" />
                     </IconButton>
                   }
                 >
@@ -116,35 +158,23 @@ export function UploadView() {
                 </ListItem>
               ))}
             </List>
-          </Box>
-        )}
+          )}
+          
+          {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
 
-        <Stack alignItems="flex-end" sx={{ mt: 3 }}>
-          <Button variant="contained" onClick={handleUpload} disabled={isUploading || files.length === 0}>
-            {isUploading ? <CircularProgress size={24} /> : `${files.length} CV Yükle`}
-          </Button>
+          {/* --- Buton --- */}
+          <Stack alignItems="flex-end" sx={{ mt: 3 }}>
+            <Button
+              variant="contained"
+              color="primary"
+              size="large"
+              onClick={handleProcessAndRank}
+              disabled={isLoading}
+            >
+              {isLoading ? <CircularProgress size={24} /> : 'Puanla ve Sonuçları Göster'}
+            </Button>
+          </Stack>
         </Stack>
-
-        {uploadError && <Alert severity="error" sx={{ mt: 3 }}>{uploadError}</Alert>}
-        {uploadResult && (
-          <Alert severity={uploadResult.failedOrSkippedFiles > 0 ? 'warning' : 'success'} sx={{ mt: 3 }}>
-            <Typography variant="subtitle2">{uploadResult.message}</Typography>
-            <Typography variant="body2">Başarıyla İşlenen: {uploadResult.successfullyProcessed}</Typography>
-            <Typography variant="body2">Başarısız/Atlanan: {uploadResult.failedOrSkippedFiles}</Typography>
-            {uploadResult.errorDetails.length > 0 && (
-              <Box sx={{ mt: 1 }}>
-                <Typography variant="caption">Detaylar:</Typography>
-                <List dense>
-                  {uploadResult.errorDetails.map((detail, index) => (
-                    <ListItem key={index}>
-                      <ListItemText primary={detail} />
-                    </ListItem>
-                  ))}
-                </List>
-              </Box>
-            )}
-          </Alert>
-        )}
       </Card>
     </Container>
   );

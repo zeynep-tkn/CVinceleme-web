@@ -177,8 +177,8 @@ export function UserView() {
                         id: candidate.id,
                         company: "eroğlu",
                         isVerified: true,
-                        role: "müdür",
-                        status: "coşturuyor"
+                        role: "uzman",
+                        status: "aktif"
                       }}
                       selected={selected.indexOf(candidate.nameSurname) !== -1} 
                       onSelectRow={()=> {

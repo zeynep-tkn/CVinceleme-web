@@ -1,96 +1,81 @@
-import { useState, useCallback } from 'react';
+import { useLocation } from 'react-router-dom';
 
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
-import Button from '@mui/material/Button';
+import Paper from '@mui/material/Paper';
+import Table from '@mui/material/Table';
+import Alert from '@mui/material/Alert';
+import TableRow from '@mui/material/TableRow';
+import TableHead from '@mui/material/TableHead';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
-import Pagination from '@mui/material/Pagination';
-
-import { DashboardContent } from 'src/layouts/dashboard';
-
-import { Iconify } from 'src/components/iconify';
-
-import { PostItem } from '../post-item';
-import { PostSort } from '../post-sort';
-import { PostSearch } from '../post-search';
-
-import type { IPostItem } from '../post-item';
+import TableContainer from '@mui/material/TableContainer';
 
 // ----------------------------------------------------------------------
 
-type Props = {
-  posts: IPostItem[];
+type RankedCandidate = {
+  candidateId: number;
+  nameSurname: string;
+  score: number;
+  reason: string;
+  summary: string;
 };
 
-export function AdaySiralaView({ posts }: Props) {
-  const [sortBy, setSortBy] = useState('latest');
+export function RankCandidatesView() {
+  const location = useLocation();
+  
+  // "CV Yükle" sayfasından gönderilen verileri alıyoruz.
+  const results: RankedCandidate[] = location.state?.results || [];
+  const jobTitle: string = location.state?.jobTitle || 'Belirtilmemiş İş Tanımı';
 
-  const handleSort = useCallback((newSort: string) => {
-    setSortBy(newSort);
-  }, []);
+  // Eğer bir yönlendirme ile gelinmediyse veya sonuç yoksa mesaj göster.
+  if (results.length === 0) {
+    return (
+        <Container>
+            <Typography variant="h4" sx={{ mb: 5 }}>
+                Aday Sıralama Sonuçları
+            </Typography>
+            <Alert severity="info">
+                Görüntülenecek bir puanlama sonucu bulunamadı. Lütfen &apos;CV Yükle&apos; sayfasından yeni bir puanlama yapın.
+            </Alert>
+        </Container>
+    );
+  }
 
   return (
-    <DashboardContent>
-      <Box
-        sx={{
-          mb: 5,
-          display: 'flex',
-          alignItems: 'center',
-        }}
-      >
-        <Typography variant="h4" sx={{ flexGrow: 1 }}>
-          Aday Sırala
-        </Typography>
-        <Button
-          variant="contained"
-          color="inherit"
-          startIcon={<Iconify icon="mingcute:add-line" />}
-        >
-          New post
-        </Button>
-      </Box>
+    <Container>
+      <Typography variant="h4" sx={{ mb: 2 }}>
+        Aday Sıralama Sonuçları
+      </Typography>
+      <Typography variant="subtitle1" sx={{ mb: 5, color: 'text.secondary' }}>
+        {/* DÜZELTME: Çift tırnaklar HTML kodu ile değiştirildi */}
+        İş Tanımı: &quot;{jobTitle}&quot;
+      </Typography>
 
-      <Box
-        sx={{
-          mb: 5,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}
-      >
-        <PostSearch posts={posts} />
-        <PostSort
-          sortBy={sortBy}
-          onSort={handleSort}
-          options={[
-            { value: 'latest', label: 'Latest' },
-            { value: 'popular', label: 'Popular' },
-            { value: 'oldest', label: 'Oldest' },
-          ]}
-        />
-      </Box>
-
-      <Grid container spacing={3}>
-        {posts.map((post, index) => {
-          const latestPostLarge = index === 0;
-          const latestPost = index === 1 || index === 2;
-
-          return (
-            <Grid
-              key={post.id}
-              size={{
-                xs: 12,
-                sm: latestPostLarge ? 12 : 6,
-                md: latestPostLarge ? 6 : 3,
-              }}
-            >
-              <PostItem post={post} latestPost={latestPost} latestPostLarge={latestPostLarge} />
-            </Grid>
-          );
-        })}
-      </Grid>
-
-      <Pagination count={10} color="primary" sx={{ mt: 8, mx: 'auto' }} />
-    </DashboardContent>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell sx={{ width: '10%' }}>Puan</TableCell>
+              <TableCell sx={{ width: '20%' }}>Ad Soyad</TableCell>
+              <TableCell sx={{ width: '35%' }}>Değerlendirme Gerekçesi</TableCell>
+              <TableCell sx={{ width: '35%' }}>Özet</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {results.map((row) => (
+              <TableRow key={row.candidateId}>
+                <TableCell>
+                  <Typography variant="h5" component="div">{row.score}</Typography>
+                </TableCell>
+                <TableCell>{row.nameSurname}</TableCell>
+                <TableCell>{row.reason}</TableCell>
+                <TableCell>{row.summary}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Container>
   );
 }
