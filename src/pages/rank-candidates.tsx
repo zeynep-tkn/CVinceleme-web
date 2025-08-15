@@ -1,16 +1,16 @@
 import { _posts } from 'src/_mock';
 import { CONFIG } from 'src/config-global';
 
-import { BlogView } from 'src/sections/blog/view';
+import { AdaySiralaView } from 'src/sections/rankCandidates/view';
 
 // ----------------------------------------------------------------------
 
 export default function Page() {
   return (
     <>
-      <title>{`Blog - ${CONFIG.appName}`}</title>
+      <title>{`Aday Sırala - ${CONFIG.appName}`}</title>
 
-      <BlogView posts={_posts} />
+      <AdaySiralaView posts={_posts} />
     </>
   );
 }

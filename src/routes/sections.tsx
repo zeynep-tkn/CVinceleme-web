@@ -12,12 +12,11 @@ import { DashboardLayout } from 'src/layouts/dashboard';
 
 // ----------------------------------------------------------------------
 
-export const DashboardPage = lazy(() => import('src/pages/dashboard'));
-export const BlogPage = lazy(() => import('src/pages/blog'));
-export const UserPage = lazy(() => import('src/pages/user'));
+export const HomePage = lazy(() => import('src/pages/home'));//dashboard
+export const RankCandidatesPage = lazy(() => import('src/pages/rank-candidates')); //blog
+export const CandidatesPage = lazy(() => import('src/pages/candidates')); //user
 export const SignInPage = lazy(() => import('src/pages/sign-in'));
-export const ProductsPage = lazy(() => import('src/pages/cv_yukle'));
-export const Page404 = lazy(() => import('src/pages/page-not-found'));
+export const UploadCVPage = lazy(() => import('src/pages/upload-cv')); //products
 
 const renderFallback = () => (
   <Box
@@ -49,10 +48,10 @@ export const routesSection: RouteObject[] = [
       </DashboardLayout>
     ),
     children: [
-      { index: true, element: <DashboardPage /> },
-      { path: 'user', element: <UserPage /> },
-      { path: 'products', element: <ProductsPage /> },
-      { path: 'blog', element: <BlogPage /> },
+      { index: true, element: <HomePage /> },
+      { path: 'candidate', element: <CandidatesPage /> },
+      { path: 'upload', element: <UploadCVPage /> },
+      { path: 'rank', element: <RankCandidatesPage /> },
     ],
   },
   {
@@ -63,9 +62,9 @@ export const routesSection: RouteObject[] = [
       </AuthLayout>
     ),
   },
-  {
-    path: '404',
-    element: <Page404 />,
-  },
-  { path: '*', element: <Page404 /> },
+  // {
+  //   path: '404',
+  //   element: <Page404 />,
+  // },
+  // { path: '*', element: <Page404 /> },
 ];

@@ -20,7 +20,6 @@ import {TableEmptyRows} from '../table-empty-rows';
 import {UserTableToolbar} from '../user-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../utils';
 
-// ======================================================================
 
 type Candidate = {
   id: number;
@@ -129,7 +128,7 @@ export function UserView() {
   }
 
   if (error) {
-    return <Typography>Hata: {error}. Backend API'nizin çalıştığından ve CORS ayarlarının doğru olduğundan emin olun.</Typography>
+    return <Typography>Hata: {error}. Backend APInizin çalıştığından ve CORS ayarlarının doğru olduğundan emin olun.</Typography>
   }
 
 

@@ -20,32 +20,22 @@ export const navData = [
   },
   {
     title: 'Adaylar',
-    path: '/user',
+    path: '/candidate',
     icon: icon('ic-user'),
   },
   {
     title: 'CV Yükle',
-    path: '/products',
-    icon: icon('ic-cart'),
-    info: (
-      <Label color="error" variant="inverted">
-        +3
-      </Label>
-    ),
+    path: '/upload',
+    icon: icon('ic-upload'),
   },
   {
     title: 'Aday Sırala',
-    path: '/blog',
-    icon: icon('ic-blog'),
+    path: '/rank',
+    icon: icon('ic_analytics'),
   },
   {
     title: 'Giriş Yap',
     path: '/sign-in',
     icon: icon('ic-lock'),
-  },
-  {
-    title: 'Ayarlar',
-    path: '/404',
-    icon: icon('ic-disabled'),
   },
 ];

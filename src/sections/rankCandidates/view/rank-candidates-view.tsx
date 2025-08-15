@@ -22,7 +22,7 @@ type Props = {
   posts: IPostItem[];
 };
 
-export function BlogView({ posts }: Props) {
+export function AdaySiralaView({ posts }: Props) {
   const [sortBy, setSortBy] = useState('latest');
 
   const handleSort = useCallback((newSort: string) => {
@@ -39,7 +39,7 @@ export function BlogView({ posts }: Props) {
         }}
       >
         <Typography variant="h4" sx={{ flexGrow: 1 }}>
-          Blog
+          Aday Sırala
         </Typography>
         <Button
           variant="contained"
