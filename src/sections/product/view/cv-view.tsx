@@ -57,7 +57,7 @@ const defaultFilters = {
   category: CATEGORY_OPTIONS[0].value,
 };
 
-export function ProductsView() {
+export function CVView() {
   const [sortBy, setSortBy] = useState('featured');
 
   const [openFilter, setOpenFilter] = useState(false);
@@ -89,7 +89,7 @@ export function ProductsView() {
       <CartIcon totalItems={8} />
 
       <Typography variant="h4" sx={{ mb: 5 }}>
-        Products
+        CV Yükle
       </Typography>
       <Box
         sx={{
