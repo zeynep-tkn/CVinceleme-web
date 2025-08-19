@@ -16,6 +16,7 @@ export const HomePage = lazy(() => import('src/pages/home'));//dashboard
 export const RankCandidatesPage = lazy(() => import('src/pages/rank-candidates')); //blog
 export const CandidatesPage = lazy(() => import('src/pages/candidates')); //user
 export const SignInPage = lazy(() => import('src/pages/sign-in'));
+export const SignUpPage = lazy(() => import('src/pages/sign-up'));
 export const UploadCVPage = lazy(() => import('src/pages/upload-cv')); //products
 
 const renderFallback = () => (
@@ -61,5 +62,9 @@ export const routesSection: RouteObject[] = [
         <SignInPage />
       </AuthLayout>
     ),
+  },
+  {
+    path: 'sign-up',
+    element: <SignUpPage />,
   },
 ];
