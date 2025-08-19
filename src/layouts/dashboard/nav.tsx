@@ -1,3 +1,6 @@
+
+import '../../css/customlayout.css';
+
 import type { Theme, SxProps, Breakpoint } from '@mui/material/styles';
 
 import { useEffect } from 'react';
@@ -112,13 +115,13 @@ export function NavContent({ data, slots, workspaces, sx }: NavContentProps) {
 
   return (
     <>
-      <Logo />
+      <Logo sx={{  }} />
 
       {slots?.topArea}
 
-      <WorkspacesPopover data={workspaces} sx={{ my: 2 }} />
+      {/* <WorkspacesPopover data={workspaces} sx={{ my: 2 }} /> */}
 
-      <Scrollbar fillContent>
+      <Scrollbar  fillContent>
         <Box
           component="nav"
           sx={[

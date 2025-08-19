@@ -1,3 +1,5 @@
+import '../../css/customlayout.css';
+
 import type { Breakpoint } from '@mui/material/styles';
 
 import { merge } from 'es-toolkit';
@@ -118,7 +120,7 @@ export function DashboardLayout({
        * @Sidebar
        *************************************** */
       sidebarSection={
-        <NavDesktop data={navData} layoutQuery={layoutQuery} workspaces={_workspaces} />
+        <NavDesktop data={navData} layoutQuery={layoutQuery} workspaces={undefined} />
       }
       /** **************************************
        * @Footer
