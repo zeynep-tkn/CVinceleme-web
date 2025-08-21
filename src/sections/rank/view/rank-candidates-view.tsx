@@ -48,7 +48,6 @@ export function RankCandidatesView() {
         Aday Sıralama Sonuçları
       </Typography>
       <Typography variant="subtitle1" sx={{ mb: 5, color: 'text.secondary' }}>
-        {/* DÜZELTME: Çift tırnaklar HTML kodu ile değiştirildi */}
         İş Tanımı: &quot;{jobTitle}&quot;
       </Typography>
 

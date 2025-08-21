@@ -31,13 +31,6 @@ export function SignUpView() {
           <Stack sx={{ mb: 5, alignItems: 'center' }}>
             <Typography variant="h4" >Kayıt Ol</Typography>
 
-            <Stack direction="row" spacing={0.5} sx={{ mt: 2 }}>
-              <Typography variant="body2">Hesabın var mı?</Typography>
-              {/* DÜZELTME: Eksik olan 'paths' yerine doğrudan adres yazıldı. */}
-              <Link component={RouterLink} to="/sign-in" variant="subtitle2">
-                Giriş Yap
-              </Link>
-            </Stack>
           </Stack>
 
           <Stack spacing={3}>
@@ -70,6 +63,8 @@ export function SignUpView() {
             Kayıt Ol
           </LoadingButton>
 
+
+
           <Divider sx={{ my: 3 }}>
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
               VEYA
@@ -81,6 +76,13 @@ export function SignUpView() {
               <Iconify icon="logos:google-icon" />
             </Button>
           </Stack>
+
+                    <Stack direction="row" spacing={0.5} justifyContent="center" sx={{ mt: 2, alignItems: 'center', }}>
+              <Typography variant="body2">Hesabın var mı?</Typography>
+              <Link component={RouterLink} to="/sign-in" variant="subtitle2">
+                Giriş Yap
+              </Link>
+            </Stack>
         </Card>
       </Stack>
     </Box>
