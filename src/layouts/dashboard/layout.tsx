@@ -9,11 +9,12 @@ import Box from '@mui/material/Box';
 import Alert from '@mui/material/Alert';
 import { useTheme } from '@mui/material/styles';
 
+import { useRouter } from 'src/routes/hooks';
+
 import { _langs, _notifications } from 'src/_mock';
 
 import { NavMobile, NavDesktop } from './nav';
 import { layoutClasses } from '../core/classes';
-import { _account } from '../nav-config-account';
 import { dashboardLayoutVars } from './css-vars';
 import { navData } from '../nav-config-dashboard';
 import { MainSection } from '../core/main-section';
@@ -50,8 +51,29 @@ export function DashboardLayout({
   layoutQuery = 'lg',
 }: DashboardLayoutProps) {
   const theme = useTheme();
-
+  const router = useRouter();
   const { value: open, onFalse: onClose, onTrue: onOpen } = useBoolean();
+
+  // --- YENİ EKLENEN BÖLÜM BAŞLANGICI ---
+
+  // 1. localStorage'dan kullanıcı adını al
+  const userName = localStorage.getItem('userName') || 'Misafir';
+
+  // 2. AccountPopover için dinamik veri oluştur
+  const accountData = {
+    displayName: userName,
+    email: `Hoşgeldin, ${userName}!`, // E-posta yerine karşılama mesajı
+    photoURL: `/assets/images/avatar/avatar-25.webp`, // Varsayılan avatar
+  };
+
+  // 3. Çıkış yapma fonksiyonunu tanımla
+  const handleLogout = () => {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('userName');
+    router.push('/sign-in'); // Giriş yapma sayfasına yönlendir
+  };
+
+  // --- YENİ EKLENEN BÖLÜM SONU ---
 
   const renderHeader = () => {
     const headerSlotProps: HeaderSectionProps['slotProps'] = {
@@ -88,8 +110,8 @@ export function DashboardLayout({
           {/** @slot Notifications popover */}
           <NotificationsPopover data={_notifications} />
 
-          {/** @slot Account drawer */}
-          <AccountPopover data={_account} />
+          {/** @slot Account drawer - Dinamik veri ve logout fonksiyonu ile güncellendi */}
+          <AccountPopover account={accountData} onLogout={handleLogout} />
         </Box>
       ),
     };
