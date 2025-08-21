@@ -1,8 +1,8 @@
 import type { RouteObject } from 'react-router';
 
 import { lazy, Suspense } from 'react';
-import { Outlet } from 'react-router-dom';
 import { varAlpha } from 'minimal-shared/utils';
+import { Outlet, Navigate } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
@@ -12,12 +12,14 @@ import { DashboardLayout } from 'src/layouts/dashboard';
 
 // ----------------------------------------------------------------------
 
-export const HomePage = lazy(() => import('src/pages/home'));//dashboard
-export const RankCandidatesPage = lazy(() => import('src/pages/rank-candidates')); //blog
-export const CandidatesPage = lazy(() => import('src/pages/candidates')); //user
+export const HomePage = lazy(() => import('src/pages/home'));
+export const RankCandidatesPage = lazy(() => import('src/pages/rank-candidates'));
+export const CandidatesPage = lazy(() => import('src/pages/candidates'));
 export const SignInPage = lazy(() => import('src/pages/sign-in'));
 export const SignUpPage = lazy(() => import('src/pages/sign-up'));
-export const UploadCVPage = lazy(() => import('src/pages/upload-cv')); //products
+export const UploadCVPage = lazy(() => import('src/pages/upload-cv'));
+
+// ----------------------------------------------------------------------
 
 const renderFallback = () => (
   <Box
@@ -39,14 +41,33 @@ const renderFallback = () => (
   </Box>
 );
 
+// --- YENİ EKLENEN KORUMA (GUARD) COMPONENT'İ ---
+const AuthGuard = ({ children }: { children: React.ReactNode }) => {
+  const token = localStorage.getItem('authToken');
+
+  // Eğer token yoksa (kullanıcı giriş yapmamışsa),
+  // kullanıcıyı giriş yapma sayfasına yönlendir.
+  if (!token) {
+    return <Navigate to="/sign-in" replace />;
+  }
+
+  // Eğer token varsa, kullanıcının gitmek istediği sayfayı göster.
+  return <>{children}</>;
+};
+// ----------------------------------------------------------------------
+
 export const routesSection: RouteObject[] = [
   {
+    // Ana uygulama sayfaları bu yolun altında toplanacak.
+    // Bu yolun tamamı artık AuthGuard ile korunuyor.
     element: (
-      <DashboardLayout>
-        <Suspense fallback={renderFallback()}>
-          <Outlet />
-        </Suspense>
-      </DashboardLayout>
+      <AuthGuard>
+        <DashboardLayout>
+          <Suspense fallback={renderFallback()}>
+            <Outlet />
+          </Suspense>
+        </DashboardLayout>
+      </AuthGuard>
     ),
     children: [
       { index: true, element: <HomePage /> },

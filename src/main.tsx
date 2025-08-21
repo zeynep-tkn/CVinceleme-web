@@ -1,6 +1,6 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { HelmetProvider } from 'react-helmet-async'; // 1. Adım: Import et
+import { HelmetProvider } from 'react-helmet-async';
 import { Outlet, RouterProvider, createBrowserRouter } from 'react-router-dom';
 
 import App from './app';
