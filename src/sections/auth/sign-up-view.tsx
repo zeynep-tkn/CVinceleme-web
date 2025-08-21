@@ -56,9 +56,8 @@ export function SignUpView() {
     <Box sx={{ height: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <Stack alignItems="center" justifyContent="center" sx={{ width: 1, maxWidth: 420, p: 3 }}>
         <Card sx={{ p: { xs: 3, md: 5 }, width: 1 }}>
-          <Stack sx={{ mb: 5, alignItems: 'center' }}>
-            <Typography variant="h4" >Kayıt Ol</Typography>
-
+          <Stack sx={{ mb: 3, alignItems: 'center' }}>
+            <Typography variant="h4" sx={{ mb: 2 }}>Kayıt Ol</Typography>
           </Stack>
 
           <Stack spacing={3}>

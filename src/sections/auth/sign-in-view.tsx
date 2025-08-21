@@ -16,7 +16,6 @@ import { useRouter } from 'src/routes/hooks';
 
 import { Iconify } from 'src/components/iconify';
 
-// ----------------------------------------------------------------------
 
 export function SignInView() {
   const router = useRouter();

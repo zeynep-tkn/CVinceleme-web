@@ -65,6 +65,10 @@ export const routesSection: RouteObject[] = [
   },
   {
     path: 'sign-up',
-    element: <SignUpPage />,
+    element: (
+      <AuthLayout>
+        <SignUpPage />
+      </AuthLayout>
+    ),
   },
 ];
