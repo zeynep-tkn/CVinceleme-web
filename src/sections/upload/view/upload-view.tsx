@@ -94,6 +94,8 @@ export function UploadView() {
         Yeni Analiz Başlat ve Puanla
       </Typography>
 
+
+
       <Card sx={{ p: 3 }}>
         <Stack spacing={3}>
           {/* --- Form Alanları --- */}
