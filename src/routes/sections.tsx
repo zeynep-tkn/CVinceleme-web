@@ -17,7 +17,7 @@ export const RankCandidatesPage = lazy(() => import('src/pages/rank-candidates')
 export const CandidatesPage = lazy(() => import('src/pages/candidates'));
 export const SignInPage = lazy(() => import('src/pages/sign-in'));
 export const SignUpPage = lazy(() => import('src/pages/sign-up'));
-export const UploadCVPage = lazy(() => import('src/pages/upload-cv'));
+export const StartAnalysisPage = lazy(() => import('src/pages/start-analysis'));
 
 // ----------------------------------------------------------------------
 
@@ -72,7 +72,7 @@ export const routesSection: RouteObject[] = [
     children: [
       { index: true, element: <HomePage /> },
       { path: 'candidate', element: <CandidatesPage /> },
-      { path: 'upload', element: <UploadCVPage /> },
+      { path: 'start-analysis', element: <StartAnalysisPage /> },
       { path: 'rank', element: <RankCandidatesPage /> },
     ],
   },

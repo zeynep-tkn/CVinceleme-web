@@ -23,9 +23,9 @@ export const navData = [
     icon: icon('ic-candidates'),
   },
   {
-    title: 'CV Yükle',
-    path: '/upload',
-    icon: icon('ic-upload'),
+    title: 'Analize Başla',
+    path: '/start-analysis',
+    icon: icon('ic-upload'),//yükleme iconu değiştir
   },
   {
     title: 'Aday Sırala',

@@ -7,7 +7,7 @@ import { UploadView } from 'src/sections/upload/view';
 export default function Page() {
   return (
     <>
-      <title>{`CV Yükle - ${CONFIG.appName}`}</title>
+      <title>{`Analize Başla - ${CONFIG.appName}`}</title>
 
       <UploadView />
     </>
